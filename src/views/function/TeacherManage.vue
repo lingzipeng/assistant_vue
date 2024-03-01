@@ -38,7 +38,7 @@
           size="small"
           @click="
             title = '修改教师';
-            showDialog(scope.row.id);
+            showDialog(scope.row);
           "
           >编辑</el-button
         >
@@ -205,7 +205,7 @@ const addTeacher = async () => {
   ElMessage.success(result.msg ? result.msg : "添加成功");
 };
 
-//展示编辑弹窗
+//展示添加弹窗
 const showDialog = (row) => {
   dialogVisible.value = true;
   teacherModel.value.id = row.id;

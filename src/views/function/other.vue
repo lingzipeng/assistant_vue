@@ -1,28 +1,22 @@
 <template>
-  <el-dialog title="添加教师" width="30%">
-    <el-form :model="formData" :rules="rules" ref="form">
-      <el-form-item label="ID" prop="id">
-        <el-input v-model="formData.id"></el-input>
-      </el-form-item>
-      <el-form-item label="姓名" prop="name">
-        <el-input v-model="formData.name"></el-input>
-      </el-form-item>
-      <el-form-item label="年龄" prop="age">
-        <el-input v-model="formData.age" type="number"></el-input>
-      </el-form-item>
-      <el-form-item label="电话" prop="phone">
-        <el-input v-model="formData.phone" type="tel"></el-input>
-      </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input v-model="formData.password" type="password"></el-input>
-      </el-form-item>
-    </el-form>
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="dialogVisible = false">取消</el-button>
-      <el-button type="primary" @click="handleSubmit">确定</el-button>
-    </span>
-  </el-dialog>
+  <div>
+    <input v-model="inputText" placeholder="输入内容" />
+    <p v-if="isTextTooLong">字数过多的字样</p>
+  </div>
 </template>
 
-<script></script>
-<style></style>
+<script setup>
+import { ref, watch } from "vue";
+
+// 使用ref创建响应式变量来存储输入内容
+const inputText = ref("");
+// 创建一个用于表示是否输入内容过长的变量
+const isTextTooLong = ref(false);
+
+// 使用watch监听inputText变量的变化
+watch(inputText, (newValue,oldValue) => {
+  // 当输入内容的长度大于10时，将isTextTooLong设置为true，否则设置为false
+  isTextTooLong.value = newValue.length > 10;
+  console.log(oldValue)
+});
+</script>
