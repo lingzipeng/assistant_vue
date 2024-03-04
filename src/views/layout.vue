@@ -14,6 +14,9 @@ import {
   Expand,
   Fold,
   FullScreen,
+  Setting,
+  MagicStick,
+  HelpFilled,
 } from "@element-plus/icons-vue";
 import avatar from "@/assets/default.png";
 import screenfull from "screenfull";
@@ -22,7 +25,10 @@ import { useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
 import useInfoStore from "@/stores/userInfo.js";
 import { useTokenStore } from "@/stores/token.js";
-import { ref } from "vue";
+import { ref, reactive, watch } from "vue";
+import { h } from "vue";
+import { ElNotification } from "element-plus";
+import { useI18n } from "vue-i18n";
 const close = ref(true);
 const tokenStore = useTokenStore();
 const userInfoStore = useInfoStore();
@@ -32,7 +38,6 @@ const toSwitch = () => {
   close.value = !close.value;
 };
 //全屏切换
-const iFullScreen = ref(false);
 const toggleFullScreen = () => {
   // 判断当前浏览器是否支持全屏
   if (screenfull.isEnabled) {
@@ -45,6 +50,37 @@ const toggleFullScreen = () => {
   } else {
     //提醒 无法全屏浏览
     this.$message({ message: "你的浏览器不支持全屏", type: "warning" });
+  }
+};
+//弹出框
+const open1 = () => {
+  ElNotification({
+    title: "你好啊",
+    message: h("i", { style: "color: teal" }, "点个赞吧"),
+  });
+};
+//水印字体大小
+const font = reactive({
+  fontSize: 1,
+});
+//水印内容
+let fontConten = "你他娘的真是个天才！！！";
+//水印开关
+// const fontSwitch = ref(false);
+const fontS = () => {
+  if (font.fontSize == 1) {
+    font.fontSize = 25;
+  } else {
+    font.fontSize = 1;
+  }
+};
+//国际化
+const { locale } = useI18n();
+let change = () => {
+  if (locale.value == "zh") {
+    locale.value = "en";
+  } else {
+    locale.value = "zh";
   }
 };
 const handleCommand = (command) => {
@@ -96,7 +132,7 @@ getUserInfo();
       </div>
       <el-menu
         active-text-color="#ffd04b"
-        background-color="#232323"
+        background-color="#0f0219"
         text-color="#fff"
         router
       >
@@ -104,50 +140,50 @@ getUserInfo();
           <el-icon>
             <Avatar />
           </el-icon>
-          <span>教师管理</span>
+          <span>{{ $t("teacher") }}</span>
         </el-menu-item>
         <el-menu-item index="/function/category">
           <el-icon>
             <Histogram />
           </el-icon>
-          <span>图形化展示</span>
+          <span>{{ $t("graphical") }}</span>
         </el-menu-item>
         <el-menu-item index="/function/reviews">
           <el-icon>
             <Edit />
           </el-icon>
-          <span>学生评价</span>
+          <span>{{ $t("student") }}</span>
         </el-menu-item>
         <el-menu-item index="/function/list">
           <el-icon>
             <Trophy />
           </el-icon>
-          <span>榜单</span>
+          <span>{{ $t("list") }}</span>
         </el-menu-item>
         <el-menu-item index="/function/other">
           <el-icon>
             <Promotion />
           </el-icon>
-          <span>其他</span>
+          <span>{{ $t("other") }}</span>
         </el-menu-item>
         <el-sub-menu>
           <template #title>
             <el-icon>
               <UserFilled />
             </el-icon>
-            <span>个人中心</span>
+            <span>{{ $t("basic") }}</span>
           </template>
           <el-menu-item index="/user/info">
             <el-icon>
               <User />
             </el-icon>
-            <span>基本资料</span>
+            <span>{{ $t("change") }}</span>
           </el-menu-item>
           <el-menu-item index="/user/avatar">
             <el-icon>
               <Crop />
             </el-icon>
-            <span>更换头像</span>
+            <span>{{ $t("reset") }}</span>
           </el-menu-item>
           <el-menu-item index="/user/password">
             <el-icon>
@@ -163,15 +199,26 @@ getUserInfo();
       <!-- 头部区域 -->
       <el-header>
         <div @click="toSwitch">
-          <el-icon v-if="close"><Fold /></el-icon>
-          <el-icon v-else><Expand /></el-icon>
+          <el-icon size="30px" v-if="close"><Fold /></el-icon>
+          <el-icon size="30px" v-else><Expand /></el-icon>
         </div>
-        <div class="name">
+        <el-tooltip placement="top">
+          <template #content> 水印 </template>
+          <el-icon size="30px" @click="fontS"><MagicStick /></el-icon>
+        </el-tooltip>
+        <el-tooltip placement="top">
+          <template #content> 中英文切换 </template>
+          <el-icon @click="change" size="30px"><HelpFilled /></el-icon>
+        </el-tooltip>
+        <div>
           账号持有者：<strong>{{ userInfoStore.info.nickname }}</strong>
-          <el-icon @click="toggleFullScreen" class="FullScreen"
-            ><FullScreen
-          /></el-icon>
         </div>
+        <el-tooltip placement="top">
+          <template #content> 全屏切换 </template>
+          <el-icon size="30px" @click="toggleFullScreen" class="FullScreen"
+            ><FullScreen />
+          </el-icon>
+        </el-tooltip>
         <el-dropdown placement="bottom-end" @command="handleCommand">
           <span class="el-dropdown__box">
             <el-avatar
@@ -204,11 +251,19 @@ getUserInfo();
       <!-- 中间区域 -->
       <el-main>
         <div>
-          <router-view></router-view>
+          <el-watermark :content="fontConten" :font="font">
+            <div style="height: 500px"><router-view></router-view></div>
+          </el-watermark>
         </div>
       </el-main>
       <!-- 底部区域 -->
       <el-footer>教师助手 ©2024 Created by 凌子鹏</el-footer>
+      <div class="Affix">
+        <el-affix position="bottom" :offset="50">
+          <el-icon @click="open1" size="30px" style="background-color: cornsilk"
+            ><Setting /></el-icon
+        ></el-affix>
+      </div>
     </el-container>
   </el-container>
 </template>
@@ -218,7 +273,7 @@ getUserInfo();
   height: 100vh;
 
   .el-aside {
-    background-color: #232323;
+    background-color: #0f0219;
 
     &__logo {
       height: 120px;
@@ -263,7 +318,7 @@ getUserInfo();
 /* 设置容器透明 */
 .music-player {
   opacity: 0.01; /* 设置透明度为 0.5，数值范围为 0（完全透明）到 1（不透明） */
-  position: relative; /* 将容器设置为相对定位 */
+  position: absolute; /* 将容器设置为相对定位 */
   top: 50px; /* 向下移动 10px */
   left: 80px;
 }
@@ -272,6 +327,11 @@ getUserInfo();
   right: 500px;
 }
 .FullScreen {
-  left: 1000px;
+  left: 100px;
+}
+.Affix {
+  position: absolute;
+  left: 1450px;
+  top: 700px;
 }
 </style>

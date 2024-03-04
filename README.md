@@ -890,3 +890,32 @@ import screenfull from 'screenfull'
 
 ```
 
+## 悬浮设置按钮实现
+
+Affi组件
+
+## 水印
+
+引入组件waterMack
+
+改变字体的大小控制水印的显示
+
+## 国际化
+
+Teacher management
+
+Graphical display
+
+Student reviews
+
+List
+
+other
+
+Personal Center
+
+basic information
+
+Change avatar
+
+reset Password
