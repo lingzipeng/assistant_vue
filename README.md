@@ -860,3 +860,33 @@ export const RePasswordService = (userInfoData) =>{
 }
 ```
 
+# 新增功能：隐藏导航局栏
+
+用v-show实现
+
+# 实现全屏
+
+npm i screenfull
+
+import screenfull from 'screenfull'
+
+```
+    toggleFullScreen() {
+          // 判断当前浏览器是否支持全屏
+          if (screenfull.isEnabled) {
+            //当前页面是否全屏
+            if (!screenfull.isFullscreen) {
+              this.iFullScreen = !this.iFullScreen
+              screenfull.request()
+            } else {
+              this.iFullScreen = !this.iFullScreen
+              screenfull.exit()
+            }
+          } else {
+          //提醒 无法全屏浏览
+            this.$message({ message: '你的浏览器不支持全屏', type: 'warning' })
+          }
+        },
+
+```
+

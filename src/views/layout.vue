@@ -11,17 +11,42 @@ import {
   SwitchButton,
   Histogram,
   CaretBottom,
+  Expand,
+  Fold,
+  FullScreen,
 } from "@element-plus/icons-vue";
 import avatar from "@/assets/default.png";
-
+import screenfull from "screenfull";
 import { userInfoService } from "@/api/user.js";
 import { useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
 import useInfoStore from "@/stores/userInfo.js";
 import { useTokenStore } from "@/stores/token.js";
+import { ref } from "vue";
+const close = ref(true);
 const tokenStore = useTokenStore();
 const userInfoStore = useInfoStore();
 const router = useRouter();
+//隐藏边框导航栏
+const toSwitch = () => {
+  close.value = !close.value;
+};
+//全屏切换
+const iFullScreen = ref(false);
+const toggleFullScreen = () => {
+  // 判断当前浏览器是否支持全屏
+  if (screenfull.isEnabled) {
+    //当前页面是否全屏
+    if (!screenfull.isFullscreen) {
+      screenfull.request();
+    } else {
+      screenfull.exit();
+    }
+  } else {
+    //提醒 无法全屏浏览
+    this.$message({ message: "你的浏览器不支持全屏", type: "warning" });
+  }
+};
 const handleCommand = (command) => {
   //判断指令
   if (command === "logout") {
@@ -61,7 +86,7 @@ getUserInfo();
 <template>
   <el-container class="layout-container">
     <!-- 左侧菜单 -->
-    <el-aside width="200px">
+    <el-aside v-show="close" width="200px">
       <div class="el-aside__logo">
         <div class="music-player">
           <audio ref="audioPlayer" controls>
@@ -137,8 +162,15 @@ getUserInfo();
     <el-container>
       <!-- 头部区域 -->
       <el-header>
-        <div>
+        <div @click="toSwitch">
+          <el-icon v-if="close"><Fold /></el-icon>
+          <el-icon v-else><Expand /></el-icon>
+        </div>
+        <div class="name">
           账号持有者：<strong>{{ userInfoStore.info.nickname }}</strong>
+          <el-icon @click="toggleFullScreen" class="FullScreen"
+            ><FullScreen
+          /></el-icon>
         </div>
         <el-dropdown placement="bottom-end" @command="handleCommand">
           <span class="el-dropdown__box">
@@ -234,5 +266,12 @@ getUserInfo();
   position: relative; /* 将容器设置为相对定位 */
   top: 50px; /* 向下移动 10px */
   left: 80px;
+}
+.name {
+  position: relative;
+  right: 500px;
+}
+.FullScreen {
+  left: 1000px;
 }
 </style>
