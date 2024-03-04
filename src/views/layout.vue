@@ -171,25 +171,25 @@ getUserInfo();
             <el-icon>
               <UserFilled />
             </el-icon>
-            <span>{{ $t("basic") }}</span>
+            <span>{{ $t("person") }}</span>
           </template>
           <el-menu-item index="/user/info">
             <el-icon>
               <User />
             </el-icon>
-            <span>{{ $t("change") }}</span>
+            <span>{{ $t("basic") }}</span>
           </el-menu-item>
           <el-menu-item index="/user/avatar">
             <el-icon>
               <Crop />
             </el-icon>
-            <span>{{ $t("reset") }}</span>
+            <span>{{ $t("change") }}</span>
           </el-menu-item>
           <el-menu-item index="/user/password">
             <el-icon>
               <EditPen />
             </el-icon>
-            <span>重置密码</span>
+            <span>{{ $t("reset") }}</span>
           </el-menu-item>
         </el-sub-menu>
       </el-menu>
