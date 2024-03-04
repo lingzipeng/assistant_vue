@@ -1,8 +1,17 @@
 <<<<<<< HEAD
 # vue;助手
 =======
+
 ###### vue；助手
 >>>>>>> li
+
+## 国际化的实现
+
+![image](https://github.com/lingzipeng/assistant_vue/blob/main/src/assets/ok/Snipaste_2024-03-04_21-34-19.png)
+
+## 水印实现
+
+![image](https://github.com/lingzipeng/assistant_vue/blob/main/src/assets/ok/Snipaste_2024-03-04_21-35-17.png)
 
 # demo
 
